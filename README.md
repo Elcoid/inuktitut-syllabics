@@ -1,5 +1,3 @@
-# inuktitut-syllabics
-
 # Inuktitut Syllabics, version 1
 This simple Python app is to practice your knowledge of the qaniujaaqpait
 (Inuktitut syllabary). It is possible to translate from qaniujaaqpait
