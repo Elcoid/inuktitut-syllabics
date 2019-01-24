@@ -26,6 +26,8 @@
 # der Auswahlschaltflächen. Die Anzahl der richtigen und falschen Antworten
 # werden auf dem Bildschirm angezeigt, aber sie werden nicht gespeichert.
 
+
+
 # Some easily tweakable parameters
 generalFontSize = 20 # Font size of the text, except the question display
 qDispFontSize = 36 # Font size of the question display
