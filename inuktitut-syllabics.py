@@ -306,31 +306,21 @@ class gameInterface:
 	
 	# Object destructor: Destroys every widget if they are not already destroyed
 	def __del__(self):
-		try:
-			self.pointDisp.destroy()
-		except Exception:
-			pass
-		
-		try:
-			self.errorDisp.destroy()
-		except Exception:
-			pass
-		
-		try:
-			self.qDisp.destroy()
-		except Exception:
-			pass
-		
-		try:
-			self.back.destroy()
-		except Exception:
-			pass
+		for widget in [
+			self.pointDisp, self.errorDisp, self.qDisp, self.back
+		]:
+			try:
+				widget.destroy()
+			except TclError as e:
+				# Ignore if already destroyed
+				pass
 		
 		for row in self.buttons:
 			for button in row:
 				try:
 					button.destroy()
-				except Exception:
+				except TclError as e:
+					# Ignore if already destroyed
 					pass
 	
 	
