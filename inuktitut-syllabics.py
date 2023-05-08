@@ -244,7 +244,8 @@ class menuInterface:
 		]:
 			try:
 				widget.destroy()
-			except Exception:
+			except TclError as e:
+				# Ignore if already destroyed
 				pass
 
 
