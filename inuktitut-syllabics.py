@@ -393,15 +393,9 @@ class appClass:
 			raise ValueError("menuToGame: direction does not have an allowed value")
 		
 		# Manually sets the number of rows and columns for the difficulty
-		if difficulty == 1:
+		if difficulty in [1, 2, 3]:
 			nbRows = 3
-			nbCols = 1
-		elif difficulty == 2:
-			nbRows = 3
-			nbCols = 2
-		elif difficulty == 3:
-			nbRows = 3
-			nbCols = 3
+			nbCols = difficulty
 		else:
 			raise ValueError("menuToGame: difficulty does not have an allowed value")
 		
