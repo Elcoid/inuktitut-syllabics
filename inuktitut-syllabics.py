@@ -237,46 +237,15 @@ class menuInterface:
 	
 	# Object destructor: Destroys every widget if they are not already destroyed
 	def __del__(self):
-		try:
-			self.label1.destroy()
-		except Exception:
-			pass
-		
-		try:
-			self.button1e.destroy()
-		except Exception:
-			pass
-		
-		try:
-			self.button1m.destroy()
-		except Exception:
-			pass
-		
-		try:
-			self.button1h.destroy()
-		except Exception:
-			pass
-		
-		try:
-			self.label2.destroy()
-		except Exception:
-			pass
-		
-		try:
-			self.button2e.destroy()
-		except Exception:
-			pass
-		
-		try:
-			self.button2m.destroy()
-		except Exception:
-			pass
-		
-		try:
-			self.button2h.destroy()
-		except Exception:
-			pass
-
+		for widget in [
+			self.label1, self.button1e, self.button1m,
+			self.button1h, self.label2, self.button2e,
+			self.button2m, self.button2h
+		]:
+			try:
+				widget.destroy()
+			except Exception:
+				pass
 
 
 
