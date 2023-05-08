@@ -6,8 +6,8 @@
 # Some easily tweakable parameters
 generalFontSize = 20 # Font size of the text, except the question display
 qDispFontSize = 36 # Font size of the question display
-menuLabelPadx = 15 # Horizontal padding (in pixels) around the labels in the menu
-menuButtonPadx = 2 # Horizontal padding (in pixels) around the buttons in the menu
+menuLabelPadx = 15 # Horizontal padding (in px) around the labels in the menu
+menuButtonPadx = 2 # Horizontal padding (in px) around the buttons in the menu
 menuPady = 7 # Vertical padding (in pixels) between the rows in the menu
 statMinWidth = 2 # Minimal width (in characters) of the statistics displays
 
@@ -157,8 +157,12 @@ latins = [
 
 # The size of these lists, and the maximum length of the strings in latins
 nbLetterRows = len(latins)
-nbLetterCols = min([len(row) for row in latins]) # They all have the same length, but min is just in case changes have to be made
-maxLatinWidth = max([max([len(word) for word in row]) for row in latins]) # The complicated but general way of writing 4 (this is assuming the latin strings are longer than the on-screen size of the syllabics, which is a fair assumption)
+# They all have the same length, but min is just in case changes have to be made
+nbLetterCols = min([len(row) for row in latins])
+# The complicated but general way of writing 4 (this is assuming the latin
+# strings are longer than the on-screen size of the syllabics, which is a fair
+# assumption)
+maxLatinWidth = max([max([len(word) for word in row]) for row in latins])
 
 
 # Prints the table of syllabics as a reference
@@ -235,7 +239,8 @@ class menuInterface:
 		self.button2h.grid(row = 1, column = 3, padx = menuButtonPadx, pady = menuPady)
 	
 	
-	# Object destructor: Destroys every widget if they are not already destroyed
+	# Object destructor: Destroys every widget if they are not already
+	# destroyed
 	def __del__(self):
 		for widget in [
 			self.label1, self.button1e, self.button1m,
@@ -251,22 +256,26 @@ class menuInterface:
 
 
 
-# Game interface class: Contains all the buttons and label, and updates the text when necessary
+# Game interface class: Contains all the buttons and label, and updates the text
+# when necessary
 # Members:
 #	Non-widget variables:
 #		nbPts:		Number of points made
 #		nbErrs:		Number of errors made
 #		nbRows:		Number of rows in the button grid
 #		nbCols:		Number of columns in the button grid
-#		source:		List of source letters (those that appear on qDisp)
-#		dest:		List of destination letters (those that appear on the buttons)
+#		source:		List of source letters (those that appear on
+#				qDisp)
+#		dest:		List of destination letters (those that appear
+#				on the buttons)
 #	Labels:
 #		pointDisp:	Displays the number of points made
 #		errorDisp:	Displays the number of errors made
 #		qDisp:		Displays the symbol to translate
 #	Buttons:
 #		back:		Back button to return to the menu
-#		buttons:	List of lists of buttons showing symbols to choose from
+#		buttons:	List of lists of buttons showing symbols to
+#				choose from
 # Methods:
 #	__init__:		Creates the object and places all the widgets
 #	__del__:		Destroys the object and all the widgets
@@ -282,7 +291,8 @@ class gameInterface:
 		self.dest = dest
 		
 		# First row
-		self.back = Button(master, text = "\u21e6", command = app.gameToMenu) # Back button
+		# Back button
+		self.back = Button(master, text = "\u21e6", command = app.gameToMenu)
 		self.back.grid(row = 0, column = 0)
 		
 		self.pointDisp = Label(master, text = self.nbPts, fg = "green", width = statMinWidth, relief = "ridge")
@@ -300,11 +310,16 @@ class gameInterface:
 		for i in range(nbRows):
 			self.buttons.append([])
 			for j in range(nbCols):
-				self.buttons[i].append(Button(master, width = maxLatinWidth)) # TODO: See if it is possible to do this without indexing
-				self.buttons[i][j].grid(row = i + 1, column = j + 3) # The 1 and 3 are hard coded because they depend on the other widgets
+				# TODO: See if it is possible to do this without
+				# indexing
+				self.buttons[i].append(Button(master, width = maxLatinWidth))
+				# The 1 and 3 are hard coded because they depend
+				# on the other widgets
+				self.buttons[i][j].grid(row = i + 1, column = j + 3)
 	
 	
-	# Object destructor: Destroys every widget if they are not already destroyed
+	# Object destructor: Destroys every widget if they are not already
+	# destroyed
 	def __del__(self):
 		for widget in [
 			self.pointDisp, self.errorDisp, self.qDisp, self.back
@@ -325,7 +340,9 @@ class gameInterface:
 	
 	
 	def update(self, correct):
-		# Registers the point or the error and updates their display (the explicit if and elseif are used to avoid giving a point or an error the first time update is called)
+		# Registers the point or the error and updates their display
+		# (the explicit if and elseif are used to avoid giving a point
+		# or an error the first time update is called)
 		if correct == True:
 			self.nbPts += 1
 			self.pointDisp.configure(text = self.nbPts, relief = "raised", width = max(statMinWidth, nbDigits(self.nbPts))) # The width is adjusted to fit the number if it becomes too large
@@ -335,32 +352,56 @@ class gameInterface:
 			self.errorDisp.configure(text = self.nbErrs, relief = "raised", width = max(statMinWidth, nbDigits(self.nbErrs))) # The width is adjusted here as well
 			self.pointDisp.configure(relief = "ridge")
 		
-		# Place random stuff on all the buttons and make them wrong answers
-		picked = [] # Keeps track of what has already been picked to avoid duplicates # TODO: Study the possibility to use random.sample instead. Also, if I really have a lot of time on my hands, make it so that it doesn't cause any problem if there are more buttons than available symbols
+		# Place random stuff on all the buttons and make them wrong
+		# answers
+		# This array keeps track of what has already been picked to
+		# avoid duplicates
+		# TODO: Study the possibility to use random.sample instead.
+		# Also, if I really have a lot of time on my hands, make it so
+		# that it doesn't cause any problem if there are more buttons
+		# than available symbols
+		picked = []
 		for row in self.buttons:
 			for button in row:
-				char = choice(choice(self.dest)) # Chooses a first random character
-				while char in picked: # As long as it's already picked
-					char = choice(choice(self.dest)) # Picks another one # NOTE: This loop will be infinite if there are more buttons than available symbols. It's also probably not very efficient if there are a lot of buttons
-				picked.append(char) # Remembers the chosen symbol
-				button.configure(text = char, command = lambda: self.update(False)) # Writes the text on the button and make it a wrong answer
+				# Chooses a first random character
+				char = choice(choice(self.dest))
+				# As long as it's already picked
+				# NOTE: This loop will be infinite if there are
+				# more buttons than available symbols. It's also
+				# probably not very efficient if there are a lot
+				# of buttons
+				while char in picked:
+					# Picks another one
+					char = choice(choice(self.dest))
+				picked.append(char) # Remembers chosen symbol
+				# Writes the text on the button and make it a
+				# wrong answer
+				button.configure(text = char, command = lambda: self.update(False))
 		
-		# Chooses one letter and one of the buttons, and makes them the correct answer
+		# Chooses one letter and one of the buttons, and makes them the
+		# correct answer
 		i = randrange(nbLetterRows)
 		j = randrange(nbLetterCols)
 		char = self.dest[i][j] # Chooses a first random character
+		# NOTE: This loop will be infinite if there are the same number
+		# of buttons and available symbols
 		while char in picked: # As long as it's already picked
 			i = randrange(nbLetterRows)
 			j = randrange(nbLetterCols)
-			char = self.dest[i][j] # Picks another one # NOTE: This loop will be infinite if there are the same number of buttons and available symbols
-		choice(choice(self.buttons)).configure(text = char, command = lambda: self.update(True)) # Changes a random button
-		self.qDisp.configure(text = self.source[i][j]) # Sets the question display to the analogous text in the source set
+			# Picks another one
+			char = self.dest[i][j]
+		# Changes a random button
+		choice(choice(self.buttons)).configure(text = char, command = lambda: self.update(True))
+		# Sets the question display to the analogous text in the source
+		# set
+		self.qDisp.configure(text = self.source[i][j])
 
 
 
 
 
-# App class: Only used to keep references to the menu and the game so that transition between the two be possible
+# App class: Only used to keep references to the menu and the game so that
+# transition between the two be possible
 # Members:
 #	menu:		Menu interface object
 #	game:		Game interface object
@@ -376,8 +417,10 @@ class appClass:
 	
 	# Removes the menu and sets up the game
 	# Input:
-	#	direction:	1 for inuktitut to latin, 2 for latin to inuktitut, else for an exception
-	#	difficulty:	1 for easy, 2 for medium, 3 for hard, else for an exception
+	#	direction:	1 for inuktitut to latin, 2 for latin to
+	#			inuktitut, else for an exception
+	#	difficulty:	1 for easy, 2 for medium, 3 for hard, else for
+	#			an exception
 	def menuToGame(self, direction, difficulty):
 		self.menu.__del__()
 		del self.menu
@@ -392,7 +435,7 @@ class appClass:
 		else:
 			raise ValueError("menuToGame: direction does not have an allowed value")
 		
-		# Manually sets the number of rows and columns for the difficulty
+		# Manually sets the number of rows and cols for the difficulty
 		if difficulty in [1, 2, 3]:
 			nbRows = 3
 			nbCols = difficulty
@@ -418,7 +461,9 @@ class appClass:
 master = Tk()
 master.title("Inuktitut Syllabics") # Window title
 master.resizable(width = False, height = False) # Makes the window unresizable
-master.option_add("*font", str(generalFontSize)) # Sets the font size for all the text in the app (except for the ones that specify another value)
+# Sets the font size for all the text in the app (except for the ones that
+# specify another value)
+master.option_add("*font", str(generalFontSize))
 
 app = appClass(master)
 
